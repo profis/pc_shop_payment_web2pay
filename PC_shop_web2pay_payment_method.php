@@ -56,16 +56,13 @@ class PC_shop_web2pay_payment_method extends PC_shop_payment_method {
 	}
 	
 	public function callback() {
-		$this->debug('callback()');
 		$this->_load_lib();
-		$this->debug('lib_loaded', 1);
 		$success = false;
 		try {
 			$response = WebToPay::checkResponse($_REQUEST, array(
 				'projectid'     => $this->_payment_data['login'],
 				'sign_password' => $this->_payment_data['payment_key']
 			));
-			$this->debug($response, 1);
 			$this->_response = $response;
 			if ($response['type'] !== 'macro') {
 				throw new Exception('Only macro payment callbacks are accepted');
@@ -73,20 +70,17 @@ class PC_shop_web2pay_payment_method extends PC_shop_payment_method {
 			
 			$payment_succesful = $this->_is_payment_successful();
 			if ($payment_succesful) {
-				$this->debug('Displaying "OK"', 2);
 				$success = true;
 				echo 'OK';
 			}
 		} catch (Exception $e) {
 			//echo get_class($e) . ': ' . $e->getMessage();
-			$this->debug('Displaying exception' . $e->getMessage(), 2);
 			echo $e->getMessage();
 		}
 		return $success;
 	}
 	
 	public function accept() {
-		$this->debug('accept()');
 		$this->_load_lib();
 		$payment_succesful = false;
 		try {
@@ -95,7 +89,6 @@ class PC_shop_web2pay_payment_method extends PC_shop_payment_method {
 				'sign_password' => $this->_payment_data['payment_key']
 			));
 			
-			$this->debug($response, 1);
 			$this->_response = $response;
 			
 			if ($response['type'] !== 'macro') {
